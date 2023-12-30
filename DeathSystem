@@ -1,0 +1,61 @@
+using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.SceneManagement;
+
+public class DeathSystem : MonoBehaviour
+{
+    public Slider progressSlider;
+    public Slider healthSlider;
+    public GameObject deathPanel;
+    public Transform playerTransform;
+    public string restartSceneName = "Main Menu"; // Set the name of the scene to load when your button is pressed
+
+    private bool isGamePaused = false;
+
+    void Update()
+    {
+        if (progressSlider.value == 100 && !isGamePaused)
+        {
+            PauseGame();
+        }
+    }
+
+    void PauseGame()
+    {
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+
+        if (deathPanel != null)
+        {
+            deathPanel.SetActive(true);
+        }
+        
+        isGamePaused = true;
+
+        Time.timeScale = 0f;
+    }
+
+    public void ResumeGame()
+    {
+        if (deathPanel != null)
+        {
+            deathPanel.SetActive(false);
+        }
+
+        Cursor.lockState = CursorLockMode.locked;
+        Cursor.visible = fasle;
+
+        isGamePaused = false;
+
+        Time.timeScale = 1f;
+    }
+
+    public void RestartGame()
+    {
+        SceneManager.LoadScene(restartSceneName);
+
+        healthSlider.value = 0;
+
+        ResumeGame();
+    }
+}
