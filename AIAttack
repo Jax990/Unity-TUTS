@@ -1,0 +1,49 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
+
+public class AIAttack : MonoBehaviour
+{
+    public Transform PlayerController; //your player here
+    public float followRadius = 10f; 
+    public Slider healthSlider;
+
+    private float timeElapsed = 0f;
+    private float timeInterval = 1f;
+    void Update()
+    {
+        float distanceToPlayer = Vector3.Distance(transform.position, PlayerController.position);
+        if (distanceToPlayer <= followRadius)
+        {
+
+            transform.LookAt(PlayerController.position);
+
+            transform.Translate(Vector3.forward * 5f * Time.deltaTime);
+
+            if (IsTouchingPlayer())
+            {
+                timeElapsed += Time.deltaTime;
+
+                if (timeElapsed >= timeInterval)
+                {
+                    healthSlider.value += 5;
+                    timeElapsed = 0f; 
+                }
+            }
+        }
+    }
+
+    bool IsTouchingPlayer()
+    {
+        Collider aiCollider = GetComponent<Collider>();
+        Collider playerCollider = PlayerController.GetComponent<Collider>();
+
+        if (aiCollider.bounds.Intersects(playerCollider.bounds))
+        {
+            return true;
+        }
+
+        return false;
+    }
+}
